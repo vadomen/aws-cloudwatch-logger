@@ -1,6 +1,6 @@
 {
   "name": "api-module-logging",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Logging module",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
