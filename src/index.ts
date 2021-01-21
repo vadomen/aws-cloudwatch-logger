@@ -1,1 +1,1 @@
-export * from './implementation';
+export { Logger } from './implementation';
