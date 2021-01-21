@@ -1,4 +1,4 @@
-import winston from 'winston';
+import { createLogger, transports  } from 'winston';
 import WinstonCloudWatch from 'winston-cloudwatch';
 import { ILoggerService } from './logger.interface';
 
@@ -18,13 +18,13 @@ export class Logger implements ILoggerService {
         logStreamName: 'first',
         awsRegion: 'us-east-1',
       });
-      this.transports = [ cloudWatch ];
+      this.transports = [cloudWatch];
     } else {
-      const console = new winston.transports.Console();
+      const console = new transports.Console();
       this.transports = [console];
     }
 
-    this.logger = winston.createLogger({
+    this.logger = createLogger({
       level: this.level,
       defaultMeta: { service },
       transports: this.transports,
