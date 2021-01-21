@@ -10,7 +10,7 @@ export class Logger implements ILoggerService {
 
     constructor(stage: string, level: string, service: string) {
         this.level = level;
-        this.stage = level;
+        this.stage = stage;
 
         if (this.stage === 'prod') {
             this.transports = [
