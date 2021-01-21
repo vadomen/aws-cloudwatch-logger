@@ -13,15 +13,15 @@ export class Logger implements ILoggerService {
     this.stage = stage;
 
     if (this.stage === 'prod') {
-      this.transports = [
-        new WinstonCloudWatch({
-          logGroupName: 'testing',
-          logStreamName: 'first',
-          awsRegion: 'us-east-1',
-        }),
-      ];
+      const cloudWatch = new WinstonCloudWatch({
+        logGroupName: 'testing',
+        logStreamName: 'first',
+        awsRegion: 'us-east-1',
+      });
+      this.transports = [ cloudWatch ];
     } else {
-      this.transports = [new winston.transports.Console()];
+      const console = new winston.transports.Console();
+      this.transports = [console];
     }
 
     this.logger = winston.createLogger({
