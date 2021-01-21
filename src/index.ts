@@ -1,44 +1,59 @@
-import { LambdaLog } from 'lambda-log';
+import winston from 'winston';
+import WinstonCloudWatch from 'winston-cloudwatch';
 import { ILoggerService } from './logger.interface';
 
 export class Logger implements ILoggerService {
-    private lambdaLogger: any;
+    private logger: any;
+    readonly transports: any[];
+    readonly level: string;
+    readonly stage: string;
 
-    private stage: string;
+    constructor(stage: string, level: string, service: string) {
+        this.level = level;
+        this.stage = level;
 
-    constructor(tags: any[], env: string) {
-        this.stage = env;
+        if (this.stage === 'prod') {
+            this.transports = [
+                new WinstonCloudWatch({
+                    logGroupName: 'testing',
+                    logStreamName: 'first',
+                    awsRegion: 'us-east-1'
+                })
+            ];
+        } else {
+            this.transports = [
+                new winston.transports.Console(),
+            ];
+        }
 
-        this.lambdaLogger = new LambdaLog();
-        this.lambdaLogger.options.tags.push(...tags);
+        this.logger = winston.createLogger({
+            level: this.level,
+            defaultMeta: { service },
+            transports: this.transports
+        });
     }
 
-    static create(tags: any[], env: string) {
-        return new Logger(tags, env);
+    static create(stage: string, level: string, service: string){
+        return new Logger(stage, level, service);
     }
 
-    log(message: string) {
-        if (this.stage === 'local') return console.log(message);
-        return this.lambdaLogger.info(message);
+    log(message: string, tags?: string[]): any {
+        return this.logger.info(message, tags);
     }
 
-    warn(message: string | object) {
-        if (this.stage === 'local') return console.log(message);
-        return this.lambdaLogger.warn(message);
+    warn(message: string, tags?: string[]) {
+        return this.logger.warn(message, tags);
     }
 
-    error(message: string | object) {
-        if (this.stage === 'local') return console.log(message);
-        return this.lambdaLogger.error(message);
+    error(message: string, tags?: string[]) {
+        return this.logger.error(message, tags);
     }
 
-    debug(message: string | object) {
-        if (this.stage === 'local') return console.log(message);
-        return this.lambdaLogger.debug(message);
+    debug(message: string, tags?: string[]) {
+        return this.logger.debug(message, tags);
     }
 
-    verbose(message: string | object) {
-        if (this.stage === 'local') return console.log(message);
-        return this.lambdaLogger.debug(message);
+    verbose(message: string, tags?: string[]) {
+        return this.logger.debug(message, tags);
     }
 }
