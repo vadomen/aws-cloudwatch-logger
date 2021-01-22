@@ -36,22 +36,22 @@ export class Logger implements ILoggerService {
   }
 
   log(message: string, tags?: string[]): any {
-    return this.logger.info(message, tags);
+    return this.logger.info(message, { tags });
   }
 
   warn(message: string, tags?: string[]) {
-    return this.logger.warn(message, tags);
+    return this.logger.warn(message, { tags });
   }
 
   error(message: string, tags?: string[]) {
-    return this.logger.error(message, tags);
+    return this.logger.error(message, { tags });
   }
 
   debug(message: string, tags?: string[]) {
-    return this.logger.debug(message, tags);
+    return this.logger.debug(message, { tags });
   }
 
   verbose(message: string, tags?: string[]) {
-    return this.logger.debug(message, tags);
+    return this.logger.debug(message, { tags });
   }
 }
