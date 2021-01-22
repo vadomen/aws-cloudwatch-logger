@@ -1,18 +1,15 @@
-import { createLogger, transports  } from 'winston';
+import { createLogger, transports } from 'winston';
 import WinstonCloudWatch from 'winston-cloudwatch';
 import { ILoggerService } from './logger.interface';
 
 export class Logger implements ILoggerService {
   private logger: any;
   readonly transports: any[];
-  readonly level: string;
-  readonly stage: string;
+  readonly stage = process.env.NODE_ENV || 'local';
+  readonly cloudStages = ['prod', 'dev'];
 
-  constructor(stage: string, level: string, defaultMeta: object) {
-    this.level = level;
-    this.stage = stage;
-
-    if (this.stage === 'prod') {
+  constructor(context?: string) {
+    if (this.cloudStages.includes(this.stage)) {
       const cloudWatch = new WinstonCloudWatch({
         logGroupName: 'testing',
         logStreamName: 'first',
@@ -25,33 +22,32 @@ export class Logger implements ILoggerService {
     }
 
     this.logger = createLogger({
-      level: this.level,
-      defaultMeta,
+      defaultMeta: context,
       transports: this.transports,
     });
   }
 
-  static create(stage: string, level: string, defaultMeta: object) {
-    return new Logger(stage, level, defaultMeta);
+  static create(context?: string) {
+    return new Logger(context);
   }
 
-  log(message: string, tags?: string[]): any {
-    return this.logger.info(message, { tags });
+  log(message: string, context?: string): any {
+    return this.logger.info(message, context);
   }
 
-  warn(message: string, tags?: string[]) {
-    return this.logger.warn(message, { tags });
+  warn(message: string, context?: string) {
+    return this.logger.warn(message, context);
   }
 
-  error(message: string, tags?: string[]) {
-    return this.logger.error(message, { tags });
+  error(message: string, trace?: string, context?: string) {
+    return this.logger.error(message, trace, context);
   }
 
-  debug(message: string, tags?: string[]) {
-    return this.logger.debug(message, { tags });
+  debug(message: string, context?: string) {
+    return this.logger.debug(message, context);
   }
 
-  verbose(message: string, tags?: string[]) {
-    return this.logger.debug(message, { tags });
+  verbose(message: string, context?: string) {
+    return this.logger.debug(message, context);
   }
 }

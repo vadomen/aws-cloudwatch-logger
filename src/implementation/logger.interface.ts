@@ -1,7 +1,7 @@
 export interface ILoggerService {
-  log(message: string, tags?: string[]): void;
-  warn(message: string, tags?: string[]): void;
-  debug(message: string, tags?: string[]): void;
-  error(message: string, tags?: string[]): void;
-  verbose(message: string, tags?: string[]): void;
+  log(message: any, context?: string): void;
+  warn(message: any, context?: string): void;
+  debug(message: any, context?: string): void;
+  error(message: any, trace?: string, context?: string): void;
+  verbose(message: any, context?: string): void;
 }
