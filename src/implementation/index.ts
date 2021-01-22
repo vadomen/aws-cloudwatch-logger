@@ -8,7 +8,7 @@ export class Logger implements ILoggerService {
   readonly level: string;
   readonly stage: string;
 
-  constructor(stage: string, level: string, service: string) {
+  constructor(stage: string, level: string, defaultMeta: object) {
     this.level = level;
     this.stage = stage;
 
@@ -26,13 +26,13 @@ export class Logger implements ILoggerService {
 
     this.logger = createLogger({
       level: this.level,
-      defaultMeta: { service },
+      defaultMeta,
       transports: this.transports,
     });
   }
 
-  static create(stage: string, level: string, service: string) {
-    return new Logger(stage, level, service);
+  static create(stage: string, level: string, defaultMeta: object) {
+    return new Logger(stage, level, defaultMeta);
   }
 
   log(message: string, tags?: string[]): any {
