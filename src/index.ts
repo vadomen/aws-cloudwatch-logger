@@ -1,1 +1,1 @@
-export { Logger } from './implementation';
+export { LoggerService } from './implementation';
